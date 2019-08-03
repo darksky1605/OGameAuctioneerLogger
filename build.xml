@@ -1,0 +1,37 @@
+<project name="SimpleAuctioneerLogger" default="dist" basedir=".">
+    <property name="src" location="src"/>
+    <property name="build" location="build"/>
+    <property name="libs" location="libs"/>
+    <property name="dist" location="dist"/>
+    
+    <target name="clean">
+        <delete dir="${build}"/>
+        <mkdir dir="${build}"/>
+    </target>
+    
+    <target name="compile" depends="clean">	
+        <javac srcdir="${src}" destdir="${build}">
+            <classpath>
+                <pathelement path="${libs}/json-org.jar"/>
+                <pathelement path="${libs}/socketio.jar"/>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="dist" depends="compile">
+        <jar destfile="${dist}/SimpleAuctioneerLogger.jar" basedir="${build}">
+            
+            <fileset dir="${libs}" includes="*"/>
+            <zipfileset src="jar-in-jar-loader.zip" />
+            
+            <manifest>
+                <attribute name="Rsrc-Class-Path" value="./ json-org.jar socketio.jar" />
+                <attribute name="Rsrc-Main-Class" value="AuctioneerLogger"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+            </manifest>
+        </jar>
+    </target>
+    
+    
+</project>
